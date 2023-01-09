@@ -62,7 +62,8 @@ button {
     font-size: 28px;
 }
 
-.butn:hover
+.butn:hover,
+.butn2:hover
  {
     background-color: rgb(30, 60, 61);
     color: white;
