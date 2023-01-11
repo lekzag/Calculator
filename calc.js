@@ -2,6 +2,8 @@
 
 const buttons = document.querySelectorAll('.butn');
 const operationInCurse = document.getElementById('operInCurse');
+const displayedResult = document.getElementById('buttonOperation');
+const resultFrame = document.getElementById('result');
 
 
 let arrayInCurse = [];
@@ -57,8 +59,10 @@ const buttonClear = document.getElementById('buttonClear');
 buttonClear.addEventListener('click', () => {
     if (operationInCurse.innerHTML !== '') {
         operationInCurse.innerHTML = '';
-        arrayInCurse.length = null;
-        previousElement = null;
+        arrayInCurse = [];
+        previousElement = '';
+        screenContent = ''
+        resultFrame.innerHTML = '';
     };
     });
 }
@@ -86,17 +90,41 @@ function divide(a, b) {
 // operator general function which call one the specific operation
 
 function operate(a, b, operator) {
-    const operationInCurse = document.getElementById('operInCurse');
+    if (operator === '/' && b === 0) {
+      throw new Error("can't divide by zero");
+    }
     switch(operator) {
         case "+":
-            return add();
+            return add(a, b);
         case "-":
-            return substract();
+            return substract(a, b);
         case "*":
-            return multiply();
+            return multiply(a, b);
         case "/":
-            return divide();
+            return divide(a, b);
         default:
             throw new Error("Invalid operator");
     }
 }
+
+function applyOperations() {
+  while (arrayInCurse.length > 1) {
+    for (let i = 0; i < arrayInCurse.length; i++) {
+      const element = arrayInCurse[i];
+      if (element.type === 'operator') {
+        let operator = element.value;
+        let a = arrayInCurse[i-1].value;
+        let b = arrayInCurse[i+1].value;
+        let result = operate(a, b, operator);
+        arrayInCurse.splice(i-1, 3, { type:'number', value: result });
+        resultFrame.innerHTML = result;
+      break;
+      } 
+    }
+  }
+    operationInCurse.innerHTML = arrayInCurse[0].value;
+}
+
+displayedResult.addEventListener("click", () => { 
+  applyOperations();
+});
