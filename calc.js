@@ -1,16 +1,23 @@
-// display numbers and operators on the calculator display div
-
+// call buttons and results screen from HTML
 const buttons = document.querySelectorAll('.butn');
 const operationInCurse = document.getElementById('operInCurse');
 const displayedResult = document.getElementById('buttonOperation');
+const correction = document.getElementById('buttonCorrection');
 const resultFrame = document.getElementById('result');
 
-
+// array where typed values are stored
 let arrayInCurse = [];
+
+// range of numbers
 const NUMBER_REGEX = /[0-9]/;
+
+// previous value typed
 let previousElement = null;
+
+// values and operators displayed
 let screenContent = '';
 
+// function that concatenate following numbers to merge them to each other
 function displayLabel() {
     buttons.forEach((button) => {
       button.addEventListener("click", () => {
@@ -52,8 +59,7 @@ function displayLabel() {
 
 displayLabel()
 
-console.log(arrayInCurse);
-
+// Clear button empties the array and wipes out all displayed values
 function clear() {
 const buttonClear = document.getElementById('buttonClear');
 buttonClear.addEventListener('click', () => {
@@ -70,7 +76,6 @@ buttonClear.addEventListener('click', () => {
 clear();
 
 // operation functions
-
 function add(a, b) {
     return a + b;
 }
@@ -88,7 +93,6 @@ function divide(a, b) {
 }
 
 // operator general function which call one the specific operation
-
 function operate(a, b, operator) {
     if (operator === '/' && b === 0) {
       throw new Error("can't divide by zero");
@@ -107,6 +111,7 @@ function operate(a, b, operator) {
     }
 }
 
+// the operator is linked to previous and following numbers
 function applyOperations() {
   while (arrayInCurse.length > 1) {
     for (let i = 0; i < arrayInCurse.length; i++) {
@@ -125,6 +130,22 @@ function applyOperations() {
     operationInCurse.innerHTML = arrayInCurse[0].value;
 }
 
+// operation is applied when the button is clicked
 displayedResult.addEventListener("click", () => { 
   applyOperations();
 });
+
+
+// correct button removes the last typed operator or number
+function handleCorrection() {
+  arrayInCurse.pop();
+  previousElement = arrayInCurse[arrayInCurse.length - 1];
+  screenContent = screenContent.slice(0, -1);
+  operationInCurse.innerHTML = screenContent;
+  console.log(arrayInCurse)
+}
+
+  correction.addEventListener("click", () => { 
+handleCorrection();
+});
+
