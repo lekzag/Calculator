@@ -18,21 +18,26 @@ let previousElement = null;
 let screenContent = '';
 
 // function that concatenate following numbers to merge them to each other
+
 function displayLabel() {
+
     buttons.forEach((button) => {
       button.addEventListener("click", () => {
         const labelButton = button.innerHTML;
+
+        // screenContent += labelButton;
+        //     operationInCurse.innerHTML = screenContent;
   
         if (NUMBER_REGEX.test(labelButton)) {
           if (previousElement && previousElement.type === 'number') {
             if (arrayInCurse[arrayInCurse.length - 1].type === 'operator') {
               // add new number to array and update screen
-              arrayInCurse.push({ type: 'number', value: Number(labelButton) });
+              arrayInCurse.push({ type: 'number', value: parseFloat(labelButton) });
               screenContent += labelButton;
               operationInCurse.innerHTML = screenContent;
             } else {
               // merge numbers and update array and screen
-              const mergedNumber = Number(`${previousElement.value}${labelButton}`);
+              const mergedNumber = parseFloat(`${previousElement.value}${labelButton}`);
               arrayInCurse.pop();
               arrayInCurse.push({ type: 'number', value: mergedNumber });
               previousElement = { type: 'number', value: mergedNumber };
@@ -41,8 +46,8 @@ function displayLabel() {
             }
           } else {
             // add new number to array and update screen
-            arrayInCurse.push({ type: 'number', value: Number(labelButton) });
-            previousElement = { type: 'number', value: Number(labelButton) };
+            arrayInCurse.push({ type: 'number', value: parseFloat(labelButton) });
+            previousElement = { type: 'number', value: parseFloat(labelButton) };
             screenContent += labelButton;
             operationInCurse.innerHTML = screenContent;
           }
@@ -59,6 +64,14 @@ function displayLabel() {
 
 displayLabel()
 
+window.addEventListener('keydown', function(e) {
+  const keys = Array.from(document.querySelectorAll('.btn'));
+  const btn = document.querySelector(`div[data-key="${keyCode}"]`);
+}
+);
+
+console.log(arrayInCurse);
+
 // Clear button empties the array and wipes out all displayed values
 function clear() {
 const buttonClear = document.getElementById('buttonClear');
@@ -66,6 +79,7 @@ buttonClear.addEventListener('click', () => {
     if (operationInCurse.innerHTML !== '') {
         operationInCurse.innerHTML = '';
         arrayInCurse = [];
+        currentInput = '';
         previousElement = '';
         screenContent = ''
         resultFrame.innerHTML = '';
@@ -94,33 +108,48 @@ function divide(a, b) {
 
 // operator general function which call one the specific operation
 function operate(a, b, operator) {
-    if (operator === '/' && b === 0) {
-      throw new Error("can't divide by zero");
-    }
-    switch(operator) {
-        case "+":
-            return add(a, b);
-        case "-":
-            return substract(a, b);
-        case "*":
-            return multiply(a, b);
-        case "/":
-            return divide(a, b);
-        default:
-            throw new Error("Invalid operator");
-    }
+if (operator === '/' && b === 0) {
+  return null;
+}
+
+  switch(operator) {
+      case "+":
+          return add(a, b);
+      case "-":
+          return substract(a, b);
+      case "*":
+          return multiply(a, b);
+      case "/":
+          return divide(a, b);
+      default:
+          throw new Error("Invalid operator");
+  }
 }
 
 // the operator is linked to previous and following numbers
 function applyOperations() {
+
+console.log(operationInCurse.innerHTML.match(/[-\*\/\+]/g));
+
+console.log(operationInCurse.innerHTML.match(/[^-\*\/\+]+/g));
+
+console.log(arrayInCurse);
+
   while (arrayInCurse.length > 1) {
     for (let i = 0; i < arrayInCurse.length; i++) {
       const element = arrayInCurse[i];
       if (element.type === 'operator') {
         let operator = element.value;
-        let a = arrayInCurse[i-1].value;
-        let b = arrayInCurse[i+1].value;
-        let result = operate(a, b, operator);
+        let a = arrayInCurse[i-1].value ? parseFloat(arrayInCurse[i - 1].value) : 0;
+        let b = arrayInCurse[i+1].value ? parseFloat(arrayInCurse[i + 1].value) : 0;
+
+        const operateResult = operate(a, b, operator);
+        if (operateResult === null) {
+          resultFrame.innerHTML = "can't divide by zero";
+          return;
+        }
+
+        let result = Math.round(operate(a, b, operator) * Math.pow(10, 5)) / Math.pow(10, 5);
         arrayInCurse.splice(i-1, 3, { type:'number', value: result });
         resultFrame.innerHTML = result;
       break;
@@ -134,7 +163,6 @@ function applyOperations() {
 displayedResult.addEventListener("click", () => { 
   applyOperations();
 });
-
 
 // correct button removes the last typed operator or number
 function handleCorrection() {
