@@ -1,10 +1,12 @@
-// call buttons and results screen from HTML
+// call buttons
 const buttons = document.querySelectorAll('.butn');
-const operationInCurse = document.getElementById('operInCurse');
 const displayedResult = document.getElementById('buttonOperation');
 const correction = document.getElementById('buttonCorrection');
-const resultFrame = document.getElementById('result');
 const buttonClear = document.getElementById('buttonClear');
+
+// display typed elements and results
+const operationInCurse = document.getElementById('operInCurse');
+const resultFrame = document.getElementById('result');
 
 // array where typed values are stored
 let arrayInCurse = [];
@@ -12,12 +14,8 @@ let arrayInCurse = [];
 // range of numbers
 const NUMBER_REGEX = /[0-9.]/;
 
-// previous value typed
-let previousElement = null;
-
 // values and operators displayed
 let screenContent = '';
-
 
 // button clicks call the element on them
 buttons.forEach((button) => {
@@ -25,7 +23,6 @@ buttons.forEach((button) => {
     displayLabel(button.innerHTML);
   }); 
 });
-
 
 // each click sends its value in an array
 function displayLabel(labelButton) {
@@ -103,13 +100,21 @@ displayedResult.addEventListener("click", () => {
   applyOperations();
 });
 
-// window.addEventListener('keydown', (event) => {
-//   const keyCode = event.code;
-//   const button = document.querySelector(`button[data-key="${keyCode}"]`);
-//   if(button) {
-//     displayLabel(button.innerHTML);
-//   }
-// });
+window.addEventListener('keydown', (event) => {
+  let key = event.key;
+  if(NUMBER_REGEX.test(key) || key === '+' || key === '-' || key === '*' || key === '/'){
+    displayLabel(key);
+  }
+  if (event.code === 'Enter') {
+    applyOperations();
+  }
+  if (event.code === 'Backspace') {
+    handleCorrection();
+  }
+  if (event.code === 'Delete') {
+    clear();
+  }
+});
 
 // Clear button empties the array and wipes out all displayed values
 function clear() {
