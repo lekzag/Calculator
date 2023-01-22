@@ -9,7 +9,7 @@ const resultFrame = document.getElementById('result');
 let arrayInCurse = [];
 
 // range of numbers
-const NUMBER_REGEX = /[0-9]/;
+const NUMBER_REGEX = /[0-9.]/;
 
 // previous value typed
 let previousElement = null;
@@ -17,60 +17,54 @@ let previousElement = null;
 // values and operators displayed
 let screenContent = '';
 
-// function that concatenate following numbers to merge them to each other
+buttons.forEach((button) => {
+  button.addEventListener("click", () => {
+    displayLabel(button.innerHTML);
+  }); 
+});
 
-function displayLabel() {
-
-    buttons.forEach((button) => {
-      button.addEventListener("click", () => {
-        const labelButton = button.innerHTML;
-
-        // screenContent += labelButton;
-        //     operationInCurse.innerHTML = screenContent;
-  
-        if (NUMBER_REGEX.test(labelButton)) {
-          if (previousElement && previousElement.type === 'number') {
-            if (arrayInCurse[arrayInCurse.length - 1].type === 'operator') {
-              // add new number to array and update screen
-              arrayInCurse.push({ type: 'number', value: parseFloat(labelButton) });
-              screenContent += labelButton;
-              operationInCurse.innerHTML = screenContent;
-            } else {
-              // merge numbers and update array and screen
-              const mergedNumber = parseFloat(`${previousElement.value}${labelButton}`);
-              arrayInCurse.pop();
-              arrayInCurse.push({ type: 'number', value: mergedNumber });
-              previousElement = { type: 'number', value: mergedNumber };
-              screenContent += labelButton;
-              operationInCurse.innerHTML = screenContent;
-            }
-          } else {
-            // add new number to array and update screen
-            arrayInCurse.push({ type: 'number', value: parseFloat(labelButton) });
-            previousElement = { type: 'number', value: parseFloat(labelButton) };
-            screenContent += labelButton;
-            operationInCurse.innerHTML = screenContent;
-          }
-        } else {
-          // add operator to array and update screen
-          arrayInCurse.push({ type: 'operator', value: labelButton });
-          previousElement = { type: 'operator', value: labelButton };
-          screenContent += labelButton;
-          operationInCurse.innerHTML = screenContent;
-        }
-      });
-    });
+window.addEventListener('keydown', (event) => {
+  const keyCode = event.code;
+  const button = document.querySelector(`button[data-key="${keyCode}"]`);
+  if(button) {
+    displayLabel(button.innerHTML);
   }
-
-displayLabel()
-
-window.addEventListener('keydown', function(e) {
-  const keys = Array.from(document.querySelectorAll('.btn'));
-  const btn = document.querySelector(`div[data-key="${keyCode}"]`);
+});
+    
+// function that concatenate following numbers to merge them to each other
+  
+function displayLabel(labelButton) {
+  if (NUMBER_REGEX.test(labelButton)) {
+    if (previousElement && previousElement.type === 'number') {
+      if (arrayInCurse[arrayInCurse.length - 1].type === 'operator') {
+        // add new number to array and update screen
+        arrayInCurse.push({ type: 'number', value: parseFloat(labelButton) });
+        screenContent += labelButton;
+        operationInCurse.innerHTML = screenContent;
+      } else {
+        // merge numbers and update array and screen
+        const mergedNumber = parseFloat(`${previousElement.value}${labelButton}`);
+        arrayInCurse.pop();
+        arrayInCurse.push({ type: 'number', value: mergedNumber });
+        previousElement = { type: 'number', value: mergedNumber };
+        screenContent += labelButton;
+        operationInCurse.innerHTML = screenContent;
+      }
+    } else {
+      // add new number to array and update screen
+      arrayInCurse.push({ type: 'number', value: parseFloat(labelButton) });
+      previousElement = { type: 'number', value: parseFloat(labelButton) };
+      screenContent += labelButton;
+      operationInCurse.innerHTML = screenContent;
+    }
+  } else {
+    // add operator to array and update screen
+    arrayInCurse.push({ type: 'operator', value: labelButton });
+    previousElement = { type: 'operator', value: labelButton };
+    screenContent += labelButton;
+    operationInCurse.innerHTML = screenContent;
+  }
 }
-);
-
-console.log(arrayInCurse);
 
 // Clear button empties the array and wipes out all displayed values
 function clear() {
@@ -79,7 +73,6 @@ buttonClear.addEventListener('click', () => {
     if (operationInCurse.innerHTML !== '') {
         operationInCurse.innerHTML = '';
         arrayInCurse = [];
-        currentInput = '';
         previousElement = '';
         screenContent = ''
         resultFrame.innerHTML = '';
@@ -170,10 +163,8 @@ function handleCorrection() {
   previousElement = arrayInCurse[arrayInCurse.length - 1];
   screenContent = screenContent.slice(0, -1);
   operationInCurse.innerHTML = screenContent;
-  console.log(arrayInCurse)
 }
 
   correction.addEventListener("click", () => { 
 handleCorrection();
 });
-
