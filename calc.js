@@ -21,6 +21,8 @@ buttons.forEach((button) => {
   }); 
 });
 
+let decimalAllowed = true; // flag to check if decimal point is allowed
+
 // each click sends its value in an array
 function displayLabel(labelButton) {
   if (arrayInput.length === 0 && !NUMBER_REGEX.test(labelButton)) {
@@ -29,6 +31,17 @@ function displayLabel(labelButton) {
   if (arrayInput.length > 0 && !NUMBER_REGEX.test(arrayInput[arrayInput.length - 1]) && !NUMBER_REGEX.test(labelButton)) {
     return;
   }
+
+  // Check if last input is a decimal point and current input is also a decimal point
+  if (labelButton === ".") {
+    if (!decimalAllowed) {
+        return;
+    }
+    decimalAllowed = false;
+  } else if (!NUMBER_REGEX.test(labelButton)) {
+    decimalAllowed = true; // reset decimal flag when an operator is entered
+  }
+
   arrayInput.push(labelButton);
   console.log(arrayInput);
   currentOperation.innerHTML = arrayInput.join("");

@@ -8,7 +8,6 @@ body {
 
 h1 {
     text-decoration: underline;
-    
 }
 
 #calcContainer {
@@ -26,7 +25,7 @@ h1 {
     align-items: center;
 }
 
-.line6 {
+.lastLine {
     padding-bottom: 10px;
 }
 
@@ -44,18 +43,19 @@ h1 {
 }
 
 #operInCurse {
-    color: cadetblue;
+    color: rgb(30, 60, 61);
     text-align: left;
-    height: 23px;
+    height: 25px;
 }
 
 #result {
     font-size: 28px;
     text-align: left;
+    color: rgb(30, 60, 61);
 }
 
-button {
-    background-color: rgb(80, 157, 160);
+.butn,
+.butn2 {
     width: 90px;
     height: 90px;
     border-radius: 25% 10%;
@@ -63,17 +63,31 @@ button {
     font-size: 28px;
 }
 
+.longButton {
+    width: 190px;
+    height: 90px;
+    border-radius: 15% 5%;
+    border: 2px solid black;
+    font-size: 28px;
+}
+
+.numberkey {
+    background-color: rgb(61, 147, 153);
+}
+
+#buttonOperation {
+    background-color: rgb(160, 80, 91);
+}
+
+#buttonClear {
+    background-color: rgb(59, 120, 122);
+}
+
 .butn:hover,
-.butn2:hover
+.butn2:hover,
+.longButton:hover
  {
     background-color: rgb(30, 60, 61);
     color: white;
     transition-duration: 0.6s;
-}
-
-.buttonBlank {
-    background-color: darkgray;
-    width: 90px;
-    height: 90px;
-    border: 0;
 }
