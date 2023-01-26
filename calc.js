@@ -121,6 +121,16 @@ displayedResult.addEventListener("click", () => {
 // keyboard allow to type numbers, operators and other features
 window.addEventListener('keydown', (event) => {
   let key = event.key;
+  
+  let button = document.querySelector(`[data-key="${event.keyCode}"]`);
+
+  if(button){
+    button.classList.add('pressedKey');
+    setTimeout(() => {
+      button.classList.remove('pressedKey');
+    }, 300);
+  }
+
   if(NUMBER_REGEX.test(key) || key === '+' || key === '-' || key === '*' || key === '/'){
     displayLabel(key);
   }

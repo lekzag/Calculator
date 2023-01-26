@@ -85,7 +85,8 @@ h1 {
 
 .butn:hover,
 .butn2:hover,
-.longButton:hover
+.longButton:hover,
+.pressedKey
  {
     background-color: rgb(30, 60, 61);
     color: white;
